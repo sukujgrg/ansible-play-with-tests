@@ -1,0 +1,19 @@
+---
+- name: pull an image
+  docker_image:
+    name: postgres
+    tag: "{{ POSTGRES_VERSION }}"
+    state: present
+
+- name: deploy postgres
+  docker_service:
+    state: present
+    project_name: postgres
+    definition:
+      db:
+        image: "docker.io/postgres:{{ POSTGRES_VERSION }}"
+        ports:
+          - "{{ POSTGRES_PORT }}:{{ POSTGRES_PORT }}"
+        environment:
+          # this should go in vault
+          - POSTGRES_PASSWORD=secret
